@@ -7960,7 +7960,7 @@ function ajaxHandleResponses( s, jqXHR, responses ) {
 
 // Chain conversions given the request and the original response
 function ajaxConvert( s, response ) {
-
+  alert("ajaxConvert");
 	// Apply the dataFilter if provided
 	if ( s.dataFilter ) {
 		response = s.dataFilter( response, s.dataType );
@@ -8227,12 +8227,14 @@ var // #5280: Internet Explorer will keep connections alive if we don't abort on
 // Functions to create xhrs
 function createStandardXHR() {
 	try {
+    alert(window.XMLHttpRequest);
 		return new window.XMLHttpRequest();
 	} catch( e ) {}
 }
 
 function createActiveXHR() {
 	try {
+    alert("Active XHR");
 		return new window.ActiveXObject( "Microsoft.XMLHTTP" );
 	} catch( e ) {}
 }
@@ -8262,8 +8264,9 @@ jQuery.ajaxSettings.xhr = window.ActiveXObject ?
 
 // Create transport if the browser can provide an xhr
 if ( jQuery.support.ajax ) {
-
+  alert("ajaxTransport");
 	jQuery.ajaxTransport(function( s ) {
+  
 		// Cross domain only allowed if supported through XMLHttpRequest
 		if ( !s.crossDomain || jQuery.support.cors ) {
 
@@ -8271,7 +8274,7 @@ if ( jQuery.support.ajax ) {
 
 			return {
 				send: function( headers, complete ) {
-
+          alert("SEND");
 					// Get a new xhr
 					var xhr = s.xhr(),
 						handle,
@@ -29768,18 +29771,20 @@ function _XMLHttpRequest() {
     };
 
     xhr.open = function (method, url) {
+        alert("Open XHR");
         var isSameOriginRequest = helpers.isSameOriginRequest(url);
 
         if (!isSameOriginRequest) {
             url = (helpers.proxyIsRemote() ? constants.API_URL : helpers.localProxyRoute()) +
                     "/xhr_proxy?tinyhippos_apikey=ABC&tinyhippos_rurl=" + escape(url);
-
+            alert(url);
         }
 
         origMethods.open.apply(xhr, Array.prototype.slice.call(arguments));
 
         if (!isSameOriginRequest) {
             xhr.setRequestHeader("X-Ripple-User-Agent", navigator.userAgent);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         }
     };
 
