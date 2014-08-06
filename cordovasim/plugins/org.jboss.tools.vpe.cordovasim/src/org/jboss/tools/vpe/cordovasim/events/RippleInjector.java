@@ -16,6 +16,8 @@ import org.jboss.tools.vpe.browsersim.browser.IBrowser;
 import org.jboss.tools.vpe.browsersim.browser.javafx.JavaFXBrowser;
 import org.jboss.tools.vpe.browsersim.util.BrowserSimUtil;
 import org.jboss.tools.vpe.cordovasim.CordovaSimArgs;
+import org.jboss.tools.vpe.cordovasim.CustomBrowserSim;
+import org.jboss.tools.vpe.cordovasim.ProceessUnsupportedPluginsPopUp;
 import org.eclipse.swt.browser.LocationAdapter;
 import org.eclipse.swt.browser.LocationEvent;
 
@@ -24,6 +26,13 @@ import org.eclipse.swt.browser.LocationEvent;
  * @author Ilya Buziuk (ibuziuk)
  */
 public class RippleInjector extends LocationAdapter {
+	
+	private CustomBrowserSim browserSim;
+	
+	public RippleInjector(CustomBrowserSim browserSim) {
+		this.browserSim = browserSim;
+	}
+
 	@Override
 	public void changed(LocationEvent event) {
 		final IBrowser browser = (IBrowser) event.widget;
@@ -43,6 +52,7 @@ public class RippleInjector extends LocationAdapter {
 	}
 	
 	private void inject(IBrowser browser) {
+		registerBrowserFunctions(browser);
 		browser.execute(
 				/* We have to remember userAgent of the BrowserSim, cause window.navigator object would be overridden by ripple
 				 * (see define function of the 'platform/w3c/1.0/navigator' in ripple.js and JBIDE-14652) */
@@ -56,5 +66,9 @@ public class RippleInjector extends LocationAdapter {
 					"window.opener.ripple('bootstrap').inject(window, document);" +  //$NON-NLS-1$
 				"}");  //$NON-NLS-1$
 		browser.forceFocus();
+	}
+	
+	private void registerBrowserFunctions(IBrowser browser) {
+		browser.registerBrowserFunction("csProceessUnsupportedPluginsPopUp", new ProceessUnsupportedPluginsPopUp(browserSim)); //$NON-NLS-1$
 	}
 }
