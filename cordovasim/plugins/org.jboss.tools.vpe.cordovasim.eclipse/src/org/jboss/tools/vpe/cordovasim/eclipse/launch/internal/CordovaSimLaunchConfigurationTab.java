@@ -51,6 +51,7 @@ import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
+import org.jboss.tools.cordavasim.eclipse.feedhenry.internal.FeedHenryUtil;
 import org.jboss.tools.vpe.cordovasim.eclipse.Activator;
 import org.jboss.tools.vpe.cordovasim.eclipse.launch.CordovaSimLaunchConstants;
 
@@ -61,7 +62,8 @@ import org.jboss.tools.vpe.cordovasim.eclipse.launch.CordovaSimLaunchConstants;
 @SuppressWarnings("restriction")
 public class CordovaSimLaunchConfigurationTab extends
 		AbstractLaunchConfigurationTab {
-
+	private static final String DEFAULT_FEED_HENRY_LOCAL_SERVER_URL = "http://localhost:8001";
+	private Group feedHenryGroup;
 	private Image image = Activator.getImageDescriptor("icons/cordovasim_16.png").createImage(); //$NON-NLS-1$
 	private WidgetListener defaultListener = new WidgetListener();
 	private Text projectText;
@@ -72,7 +74,9 @@ public class CordovaSimLaunchConfigurationTab extends
 	private Text startPageText;
 	private Button startPageButton;
 	private Button useDefaultPortCheckbox;
+	private Button useDefaultLocalFHServerUrlCheckbox;
 	private Text portText;
+	private Text LocalFHServerText;
 	
 	public CordovaSimLaunchConfigurationTab() {
 	}
@@ -86,7 +90,8 @@ public class CordovaSimLaunchConfigurationTab extends
 		createRootFolderEditor(comp);
 		createStartPageEditor(comp);
 		createServerEditor(comp);
-				
+		createFeedHenryEditor(comp);
+		
 		setControl(comp);
 	}
 
@@ -171,6 +176,22 @@ public class CordovaSimLaunchConfigurationTab extends
 			public void widgetSelected(SelectionEvent e) {
 				boolean useDefaultPort = ((Button) e.widget).getSelection();
 				setSelectedPort(useDefaultPort ? null : 4400);
+			}
+		});
+	}
+	
+	
+	private void createFeedHenryEditor(Composite parent) {
+		feedHenryGroup = SWTFactory.createGroup(parent, Messages.CordovaSimLaunchConfigurationTab_FEED_HENRY, 2, 1, GridData.FILL_HORIZONTAL);
+		useDefaultLocalFHServerUrlCheckbox = SWTFactory.createCheckButton(feedHenryGroup, Messages.CordovaSimLaunchConfigurationTab_USE_DEFAULT, null, true, 2); 
+		SWTFactory.createLabel(feedHenryGroup, Messages.CordovaSimLaunchConfigurationTab_FEED_HENRY_LOCAL_SERVER_URL, 1);
+		LocalFHServerText = SWTFactory.createSingleText(feedHenryGroup, 1);
+		LocalFHServerText.addModifyListener(defaultListener);
+		useDefaultLocalFHServerUrlCheckbox.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				boolean useDefaultUrl = ((Button) e.widget).getSelection();
+				setSelectedFeedHenryUrl(useDefaultUrl ? null : DEFAULT_FEED_HENRY_LOCAL_SERVER_URL); // default local FeedHenry server url
 			}
 		});
 	}
@@ -334,6 +355,21 @@ public class CordovaSimLaunchConfigurationTab extends
 		} catch (CoreException e) {
 		}
 		setSelectedPort(port);
+		
+		if (FeedHenryUtil.isFeedHenryProject(project)) {
+			String localFHServerUrl = null;
+			try {
+				if (configuration.hasAttribute(CordovaSimLaunchConstants.FEED_HENRY_LOCAL_SERVER)) {
+					localFHServerUrl = configuration.getAttribute(CordovaSimLaunchConstants.FEED_HENRY_LOCAL_SERVER,
+							DEFAULT_FEED_HENRY_LOCAL_SERVER_URL);
+				}
+			} catch (CoreException e) {
+			}
+			setSelectedFeedHenryUrl(localFHServerUrl);
+			feedHenryGroup.setVisible(true);
+		} else {
+			feedHenryGroup.setVisible(false);
+		}
 	}
 
 	@Override
@@ -359,7 +395,7 @@ public class CordovaSimLaunchConfigurationTab extends
 			configuration.setAttribute(CordovaSimLaunchConstants.PORT, port);			
 		}
 	}
-
+	
 	@Override
 	public String getName() {
 		return Messages.CordovaSimLaunchConfigurationTab_MAIN;
@@ -549,6 +585,14 @@ public class CordovaSimLaunchConfigurationTab extends
 		useDefaultPortCheckbox.setSelection(useDefaultPort);
 		portText.setEnabled(!useDefaultPort);
 		portText.setText(port != null ? port.toString() : ""); //$NON-NLS-1$
+	}
+	
+	private void setSelectedFeedHenryUrl(String url) {
+		boolean useDefaultUrl = (url == null);
+		
+		useDefaultLocalFHServerUrlCheckbox.setSelection(useDefaultUrl);
+        LocalFHServerText.setEnabled(!useDefaultUrl);        
+		LocalFHServerText.setText(url != null ? url : DEFAULT_FEED_HENRY_LOCAL_SERVER_URL); //$NON-NLS-1$
 	}
 	
 	private class WidgetListener implements ModifyListener, SelectionListener {

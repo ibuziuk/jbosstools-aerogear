@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.jboss.tools.cordavasim.eclipse.callbacks.CordovaSimRestartCallback;
 import org.jboss.tools.cordavasim.eclipse.callbacks.StopServerCallback;
+import org.jboss.tools.cordavasim.eclipse.feedhenry.internal.FeedHenryUtil;
 import org.jboss.tools.vpe.browsersim.eclipse.callbacks.OpenFileCallback;
 import org.jboss.tools.vpe.browsersim.eclipse.callbacks.ViewSourceCallback;
 import org.jboss.tools.vpe.browsersim.eclipse.launcher.BrowserSimLauncher;
@@ -70,13 +71,14 @@ public class CordovaSimLauncher {
 		IProject project = null;
 		String cordovaEngineLocation = null;
 		String cordovaVersion = null;
+		boolean isFeedHenryProject = false;
 		
 		if (projectString != null) {
 			project = CordovaSimLaunchParametersUtil.getProject(projectString);
 			
 			if (project != null) {
 				cordovaEngineLocation = CordovaSimLaunchParametersUtil.getCordovaEngineLocation(project);
-				cordovaVersion = CordovaSimLaunchParametersUtil.getCordovaVersion(project);			
+				cordovaVersion = CordovaSimLaunchParametersUtil.getCordovaVersion(project);		
 			}
 			
 			if (rootFolderString != null) {
@@ -84,6 +86,8 @@ public class CordovaSimLauncher {
 			} else {
 				rootFolder = CordovaSimLaunchParametersUtil.getDefaultRootFolder(project);
 			}
+			
+			isFeedHenryProject = FeedHenryUtil.isFeedHenryProject(project);
 		}
 		
 		String actualStartPageString = null;

@@ -10,6 +10,8 @@ public class Messages extends NLS {
 	public static String CordovaSimLaunchConfigurationTab_BROWSE;
 	public static String CordovaSimLaunchConfigurationTab_CHOOSE_ROOT_FOLDER;
 	public static String CordovaSimLaunchConfigurationTab_CHOOSE_START_PAGE_FILE;
+	public static String CordovaSimLaunchConfigurationTab_FEED_HENRY;
+	public static String CordovaSimLaunchConfigurationTab_FEED_HENRY_LOCAL_SERVER_URL;
 	public static String CordovaSimLaunchConfigurationTab_MAIN;
 	public static String CordovaSimLaunchConfigurationTab_NO_ROOT_FOLDER;
 	public static String CordovaSimLaunchConfigurationTab_NO_START_PAGE;
