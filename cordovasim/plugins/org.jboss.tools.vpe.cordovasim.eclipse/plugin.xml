@@ -22,7 +22,7 @@
   <extension
        point="org.eclipse.debug.core.launchConfigurationTypes">
     <launchConfigurationType
-          id="org.jboss.tools.vpe.cordovasim.eclipse.cordovaSimFeedHenryLaunchConfigurationType"
+          id="org.jboss.tools.vpe.cordovasim.eclipse.feedHenryLaunchConfigurationType"
           delegate="org.jboss.tools.vpe.cordovasim.eclipse.launch.internal.FeedHenryLaunchConfigurationDelegate"
           modes="run"
           name="CordovaSim \wFeedHenry">
@@ -39,7 +39,7 @@
  <extension
        point="org.eclipse.debug.ui.launchConfigurationTypeImages">
     <launchConfigurationTypeImage
-          configTypeID="org.jboss.tools.vpe.cordovasim.eclipse.cordovaSimFeedHenryLaunchConfigurationType"
+          configTypeID="org.jboss.tools.vpe.cordovasim.eclipse.feedHenryLaunchConfigurationType"
           icon="icons/cordovasim_feed_henry_16.png"
           id="org.jboss.tools.vpe.cordovasim.eclipse.cordovaSimLaunchConfigurationTypeImage">
     </launchConfigurationTypeImage>
@@ -56,8 +56,8 @@
        point="org.eclipse.debug.ui.launchConfigurationTabGroups">
     <launchConfigurationTabGroup
           class="org.jboss.tools.vpe.cordovasim.eclipse.launch.internal.FeedHenryLaunchConfigurationTabGroup"
-          id="org.jboss.tools.vpe.cordovasim.eclipse.cordovaSimLaunchConfigurationTypeTabGroup"
-          type="org.jboss.tools.vpe.cordovasim.eclipse.cordovaSimFeedHenryLaunchConfigurationType">
+          id="org.jboss.tools.vpe.cordovasim.eclipse.feedHenryLaunchConfigurationTypeTabGroup"
+          type="org.jboss.tools.vpe.cordovasim.eclipse.feedHenryLaunchConfigurationType">
     </launchConfigurationTabGroup>
  </extension>
  <extension

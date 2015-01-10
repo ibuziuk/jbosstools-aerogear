@@ -13,28 +13,9 @@ import org.jboss.tools.vpe.cordovasim.eclipse.launch.CordovaSimLaunchConstants;
 
 public class FeedHenryLaunchShortcut extends CordovaSimLaunchShortcut {
 	
-	protected void launch(IProject project, String mode) {
-		try {
-			ILaunchConfigurationType cordovaSimLaunchConfiguraionType = DebugPlugin.getDefault().getLaunchManager()
-					.getLaunchConfigurationType(CordovaSimLaunchConstants.FH_LAUNCH_CONFIGURATION_ID);
-			ILaunchConfiguration[] configurations = DebugPlugin.getDefault().getLaunchManager()
-					.getLaunchConfigurations(cordovaSimLaunchConfiguraionType);
-
-			ILaunchConfiguration existingConfiguraion = CordovaSimLaunchConfigurationAutofillUtil
-					.chooseLaunchConfiguration(configurations, project);
-			
-			if (existingConfiguraion != null) {
-				DebugUITools.launch(existingConfiguraion, mode);
-			}
-			
-			ILaunchConfigurationWorkingCopy newConfiguration = createEmptyLaunchConfiguration(project.getName());
-			CordovaSimLaunchConfigurationAutofillUtil.fillLaunchConfiguraion(newConfiguration, project);
-			newConfiguration.doSave();
-			DebugUITools.launch(newConfiguration, mode);	
-			
-		} catch (CoreException e) {
-			Activator.logError(e.getMessage(), e);
-		}
+	@Override
+	protected String getLaunchConfigType() {
+		return CordovaSimLaunchConstants.FH_LAUNCH_CONFIGURATION_ID;
 	}
 	
 }

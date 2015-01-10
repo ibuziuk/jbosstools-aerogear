@@ -48,7 +48,7 @@ public class CordovaSimLaunchShortcut implements ILaunchShortcut {
 	protected void launch(IProject project, String mode) {
 		try {
 			ILaunchConfigurationType cordovaSimLaunchConfiguraionType = DebugPlugin.getDefault().getLaunchManager()
-					.getLaunchConfigurationType(CordovaSimLaunchConstants.LAUNCH_CONFIGURATION_ID); 
+					.getLaunchConfigurationType(getLaunchConfigType()); 
 			ILaunchConfiguration[] configurations = DebugPlugin.getDefault()
 					.getLaunchManager().getLaunchConfigurations(cordovaSimLaunchConfiguraionType);
 			
@@ -71,10 +71,15 @@ public class CordovaSimLaunchShortcut implements ILaunchShortcut {
 			String namePrefix) throws CoreException {
 		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
 		ILaunchConfigurationType launchConfigurationType 
-				= launchManager.getLaunchConfigurationType(CordovaSimLaunchConstants.LAUNCH_CONFIGURATION_ID);
+				= launchManager.getLaunchConfigurationType(getLaunchConfigType());
 		ILaunchConfigurationWorkingCopy launchConfiguration;
 		launchConfiguration = launchConfigurationType.newInstance(
 				null, launchManager.generateLaunchConfigurationName(namePrefix));
 		return launchConfiguration;
 	}
+	
+	protected String getLaunchConfigType() {
+		return CordovaSimLaunchConstants.LAUNCH_CONFIGURATION_ID;
+	}
+	
 }
