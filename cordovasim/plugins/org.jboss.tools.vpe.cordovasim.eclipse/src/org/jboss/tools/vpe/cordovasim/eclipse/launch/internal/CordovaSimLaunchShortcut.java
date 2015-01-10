@@ -60,8 +60,8 @@ public class CordovaSimLaunchShortcut implements ILaunchShortcut {
 				ILaunchConfigurationWorkingCopy newConfiguration = createEmptyLaunchConfiguration(project.getName());
 				CordovaSimLaunchConfigurationAutofillUtil.fillLaunchConfiguraion(newConfiguration, project);
 				newConfiguration.doSave();
-				DebugUITools.launch(newConfiguration, mode);				
-			}
+				DebugUITools.launch(newConfiguration, mode);
+			}	
 		} catch (CoreException e) {
 			Activator.logError(e.getMessage(), e);
 		}

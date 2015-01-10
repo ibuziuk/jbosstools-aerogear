@@ -23,8 +23,8 @@ import org.jboss.tools.vpe.cordovasim.eclipse.launch.internal.CordovaSimLaunchPa
  * @author Ilya Buziuk (ibuziuk)
  */
 public final class FeedHenryUtil {
+	public static final String DEFAULT_FH_PARAMETER = "http://localhost:8001"; //$NON-NLS-1$
 	private static final String FH_CONFIG_JSON = "www/fhconfig.json"; //$NON-NLS-1$
-	private static final String DEFAULT_FH_PARAMETER = "http://localhost:8001"; //$NON-NLS-1$
 	private static final String URL = "url"; //$NON-NLS-1$
 //	private static final String PATTERN = "(?<=[?&;])url=.*?($|[&;])"; //$NON-NLS-1$
 	

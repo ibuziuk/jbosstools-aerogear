@@ -12,6 +12,7 @@ package org.jboss.tools.vpe.cordovasim.eclipse.launch.internal;
 
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.jboss.tools.cordavasim.eclipse.feedhenry.internal.FeedHenryUtil;
 
 /**
@@ -24,10 +25,12 @@ public class FeedHenryTester extends PropertyTester {
 	}
 
 	@Override
-	public boolean test(Object receiver, String property, Object[] arg2, Object expectedValue) {
-		if (IS_FEED_HENRY.equals(property) && receiver instanceof IProject) {
-			return FeedHenryUtil.isFeedHenryProject((IProject) receiver);
+	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
+		if (IS_FEED_HENRY.equals(property) && receiver instanceof IResource) {
+			IProject project = ((IResource) receiver).getProject(); 
+			return FeedHenryUtil.isFeedHenryProject(project);
 		}
 		return false;
 	}
+	
 }

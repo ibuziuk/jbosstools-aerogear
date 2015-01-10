@@ -61,49 +61,20 @@ public class CordovaSimLauncher {
 	//if you change this parameter, see also @org.jbosstools.browsersim.ui.BrowserSim
 	private static final String NOT_STANDALONE = BrowserSimLauncher.NOT_STANDALONE;	
 	
-	public static void launchCordovaSim(String projectString, String rootFolderString, String startPageString,
+	public static void launchCordovaSim(IProject project, IContainer rootFolder, String startPage,
 			Integer port) {
 		List<String> parameters = new ArrayList<String>();
 		parameters.add(NOT_STANDALONE);
 
-		IContainer rootFolder = null;
-		IProject project = null;
 		String cordovaEngineLocation = null;
 		String cordovaVersion = null;
-		
-		if (projectString != null) {
-			project = CordovaSimLaunchParametersUtil.getProject(projectString);
 			
-			if (project != null) {
-				cordovaEngineLocation = CordovaSimLaunchParametersUtil.getCordovaEngineLocation(project);
-				cordovaVersion = CordovaSimLaunchParametersUtil.getCordovaVersion(project);			
-			}
-			
-			if (rootFolderString != null) {
-				rootFolder = CordovaSimLaunchParametersUtil.getRootFolder(project, rootFolderString);
-			} else {
-				rootFolder = CordovaSimLaunchParametersUtil.getDefaultRootFolder(project);
-			}
+		if (project != null) {
+			cordovaEngineLocation = CordovaSimLaunchParametersUtil.getCordovaEngineLocation(project);
+			cordovaVersion = CordovaSimLaunchParametersUtil.getCordovaVersion(project);
 		}
-		
-		String actualStartPageString = null;
-		if (startPageString != null) {
-			actualStartPageString = startPageString;
-		} else {
-			IResource startPage = CordovaSimLaunchParametersUtil.getDefaultStartPage(project, rootFolder);
-			IPath startPagePath = CordovaSimLaunchParametersUtil.getRelativePath(rootFolder, startPage);
-			if (startPagePath != null) {
-				String startPageFromConfigXml = CordovaSimLaunchParametersUtil.getDefaultStartPageFromConfigXml(project);
-				String startPageParameters = CordovaSimLaunchParametersUtil.getStartPageParameters(startPageFromConfigXml);
-				if (startPageParameters != null) {
-					actualStartPageString = startPagePath.toString() + startPageParameters;
-				} else {
-					actualStartPageString = startPagePath.toString();					
-				}
-			}
-		}
-		
-		if (rootFolder != null && actualStartPageString != null) {		
+					
+		if (rootFolder != null && startPage!= null) {		
 			try {
 				if (!ServerStorage.getStorage().containsKey(port) && ServerUtil.isPortAvailable(port)) {
 					Server server = ServerCreator.createServer(project, rootFolder, cordovaEngineLocation, port);
@@ -115,7 +86,7 @@ public class CordovaSimLauncher {
 					ServerStorage.getStorage().put(port, server); // Adding server to the ServerStorage
 					
 					parameters.add(rootFolder.getRawLocation().makeAbsolute().toString());
-					parameters.add("http://localhost:" + port + "/" + actualStartPageString); //$NON-NLS-1$ //$NON-NLS-2$
+					parameters.add("http://localhost:" + port + "/" + startPage); //$NON-NLS-1$ //$NON-NLS-2$
 					
 					if (cordovaVersion != null) {
 						parameters.add("-version"); //$NON-NLS-1$

@@ -16,35 +16,25 @@ public class FeedHenryLaunchShortcut extends CordovaSimLaunchShortcut {
 	protected void launch(IProject project, String mode) {
 		try {
 			ILaunchConfigurationType cordovaSimLaunchConfiguraionType = DebugPlugin.getDefault().getLaunchManager()
-					.getLaunchConfigurationType(CordovaSimLaunchConstants.LAUNCH_CONFIGURATION_ID); 
-			ILaunchConfiguration[] configurations = DebugPlugin.getDefault()
-					.getLaunchManager().getLaunchConfigurations(cordovaSimLaunchConfiguraionType);
+					.getLaunchConfigurationType(CordovaSimLaunchConstants.FH_LAUNCH_CONFIGURATION_ID);
+			ILaunchConfiguration[] configurations = DebugPlugin.getDefault().getLaunchManager()
+					.getLaunchConfigurations(cordovaSimLaunchConfiguraionType);
+
+			ILaunchConfiguration existingConfiguraion = CordovaSimLaunchConfigurationAutofillUtil
+					.chooseLaunchConfiguration(configurations, project);
 			
-			ILaunchConfiguration existingConfiguraion = CordovaSimLaunchConfigurationAutofillUtil.chooseLaunchConfiguration(configurations, project);
 			if (existingConfiguraion != null) {
 				DebugUITools.launch(existingConfiguraion, mode);
-			} else {
-				ILaunchConfigurationWorkingCopy newConfiguration = createEmptyLaunchConfiguration(project.getName());
-				setConfigAttributes(newConfiguration, project);
-				newConfiguration.doSave();
-				DebugUITools.launch(newConfiguration, mode);				
 			}
+			
+			ILaunchConfigurationWorkingCopy newConfiguration = createEmptyLaunchConfiguration(project.getName());
+			CordovaSimLaunchConfigurationAutofillUtil.fillLaunchConfiguraion(newConfiguration, project);
+			newConfiguration.doSave();
+			DebugUITools.launch(newConfiguration, mode);	
+			
 		} catch (CoreException e) {
 			Activator.logError(e.getMessage(), e);
 		}
 	}
 	
-	private void setConfigAttributes(ILaunchConfigurationWorkingCopy launchConfiguration, IProject project) {
-		if (project != null) {
-			launchConfiguration.setAttribute(CordovaSimLaunchConstants.PROJECT, project.getName());
-			if (FeedHenryUtil.isFeedHenryProject(project)) {
-				String startPage = CordovaSimLaunchParametersUtil.getDefaultStartPageFromConfigXml(project);
-				if (startPage != null) {
-					startPage = FeedHenryUtil.addDefaultParameer(startPage);
-					launchConfiguration.setAttribute(CordovaSimLaunchConstants.START_PAGE, startPage); 
-				}
-			}
-		}
-	}
-
 }

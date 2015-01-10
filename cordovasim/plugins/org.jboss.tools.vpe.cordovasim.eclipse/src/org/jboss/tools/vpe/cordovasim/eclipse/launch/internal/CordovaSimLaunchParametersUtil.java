@@ -85,16 +85,16 @@ public class CordovaSimLaunchParametersUtil {
 		return null;
 	}
 
-	public static IResource getStartPage(IContainer container, String path) {
-		if (container != null && path != null && path.length() > 0) {
-			int queryIndex = path.indexOf("?"); //$NON-NLS-1$ Processing query parameters
-			if (queryIndex > 0) {
-				path = path.substring(0, queryIndex);
-			}
-			return container.findMember(new Path(path));
-		}
-		return null;
-	}
+//	public static IResource getStartPage(IContainer container, String path) {
+//		if (container != null && path != null && path.length() > 0) {
+//			int queryIndex = path.indexOf("?"); //$NON-NLS-1$ Processing query parameters
+//			if (queryIndex > 0) {
+//				path = path.substring(0, queryIndex);
+//			}
+//			return container.findMember(new Path(path));
+//		}
+//		return null;
+//	}
 
 	public static IContainer validateAndGetRootFolder(IProject project, String rootFolderString) throws CoreException {
 		IContainer rootFolder = getRootFolder(project, rootFolderString);
@@ -104,18 +104,18 @@ public class CordovaSimLaunchParametersUtil {
 		return rootFolder;
 	}
 	
-	public static IResource validateAndGetStartPage(IContainer rootFolder, String startPageString)
-			throws CoreException {
-		int indexOfQueryParameter = startPageString.indexOf("?"); //$NON-NLS-1$
-		if (indexOfQueryParameter > 0) {
-			startPageString = startPageString.substring(0, indexOfQueryParameter);
-		}
-		IResource startPage = getStartPage(rootFolder, startPageString);
-		if (startPage == null || !startPage.exists()) {
-			throw new CoreException(createErrorStatus(Messages.CordovaSimLaunchParametersUtil_INVALID_START_PAGE_PATH)); 
-		}
-		return startPage;
-	}
+//	public static IResource validateAndGetStartPage(IContainer rootFolder, String startPageString)
+//			throws CoreException {
+//		int indexOfQueryParameter = startPageString.indexOf("?"); //$NON-NLS-1$
+//		if (indexOfQueryParameter > 0) {
+//			startPageString = startPageString.substring(0, indexOfQueryParameter);
+//		}
+//		IResource startPage = getStartPage(rootFolder, startPageString);
+//		if (startPage == null || !startPage.exists()) {
+//			throw new CoreException(createErrorStatus(Messages.CordovaSimLaunchParametersUtil_INVALID_START_PAGE_PATH)); 
+//		}
+//		return startPage;
+//	}
 	
 	public static void validatePortNumber(String portString) throws CoreException {
 		try {
@@ -151,23 +151,23 @@ public class CordovaSimLaunchParametersUtil {
 		return rootFolder;
 	}
 	
-	public static IResource getDefaultStartPage(IProject project, IContainer rootFolder) {		
-		String startPageName = getDefaultStartPageFromConfigXml(project);
-		IResource startPage = getStartPage(rootFolder, startPageName);
+	public static String getStartPage(IProject project) {		
+		String startPage = getStartPageFromConfigXml(project);
+		
+		if (startPage == null) {
+			startPage = "index.html"; // standard default value //$NON-NLS-1$
+		}
+		
 		return startPage;
 	}
 	
-	public static String getDefaultStartPageFromConfigXml(IProject project) {
+	private static String getStartPageFromConfigXml(IProject project) {
 		IFile configFile = getConfigXml(project);
 		String startPageName = getStartPageName(configFile);
-
-		if (startPageName == null) {
-			startPageName = "index.html"; // standard default value //$NON-NLS-1$
-		}
 		return startPageName;
 	}
 	
-	public static IFile getConfigXml(IProject project) {
+	private static IFile getConfigXml(IProject project) {
 		IFile configFile = null;
 		if (project != null && project.isOpen()) {
 			try {
@@ -252,7 +252,7 @@ public class CordovaSimLaunchParametersUtil {
 	 * 
 	 * Returns {@code null} if it is not found.
 	 */
-	public static String getStartPageName(IFile configFile) {
+	private static String getStartPageName(IFile configFile) {
 		String startPageName = null;
 		InputStream inputStream = null;
 		try {

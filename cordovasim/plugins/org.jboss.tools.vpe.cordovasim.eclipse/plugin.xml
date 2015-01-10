@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
- <extension
-       point="org.eclipse.debug.core.launchConfigurationTypes">
-    <launchConfigurationType
-          id="org.jboss.tools.vpe.cordovasim.eclipse.cordovaSimLaunchConfigurationType"
-          delegate="org.jboss.tools.vpe.cordovasim.eclipse.launch.internal.CordovaSimLaunchConfigurationDelegate"
-          modes="run"
-          name="CordovaSim">
-    </launchConfigurationType>
- </extension>
  <extension point="org.eclipse.core.expressions.propertyTesters">
     <propertyTester
       id="org.jboss.tools.cordovasim.feedHenryTester"
@@ -20,10 +11,36 @@
     </propertyTester>
  </extension>
  <extension
+       point="org.eclipse.debug.core.launchConfigurationTypes">
+    <launchConfigurationType
+          id="org.jboss.tools.vpe.cordovasim.eclipse.cordovaSimLaunchConfigurationType"
+          delegate="org.jboss.tools.vpe.cordovasim.eclipse.launch.internal.CordovaSimLaunchConfigurationDelegate"
+          modes="run"
+          name="CordovaSim">
+    </launchConfigurationType>
+ </extension>
+  <extension
+       point="org.eclipse.debug.core.launchConfigurationTypes">
+    <launchConfigurationType
+          id="org.jboss.tools.vpe.cordovasim.eclipse.cordovaSimFeedHenryLaunchConfigurationType"
+          delegate="org.jboss.tools.vpe.cordovasim.eclipse.launch.internal.FeedHenryLaunchConfigurationDelegate"
+          modes="run"
+          name="CordovaSim \wFeedHenry">
+    </launchConfigurationType>
+ </extension>
+ <extension
        point="org.eclipse.debug.ui.launchConfigurationTypeImages">
     <launchConfigurationTypeImage
           configTypeID="org.jboss.tools.vpe.cordovasim.eclipse.cordovaSimLaunchConfigurationType"
           icon="icons/cordovasim_16.png"
+          id="org.jboss.tools.vpe.cordovasim.eclipse.cordovaSimLaunchConfigurationTypeImage">
+    </launchConfigurationTypeImage>
+ </extension>
+ <extension
+       point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+    <launchConfigurationTypeImage
+          configTypeID="org.jboss.tools.vpe.cordovasim.eclipse.cordovaSimFeedHenryLaunchConfigurationType"
+          icon="icons/cordovasim_feed_henry_16.png"
           id="org.jboss.tools.vpe.cordovasim.eclipse.cordovaSimLaunchConfigurationTypeImage">
     </launchConfigurationTypeImage>
  </extension>
@@ -33,6 +50,14 @@
           class="org.jboss.tools.vpe.cordovasim.eclipse.launch.internal.CordovaSimLaunchConfigurationTabGroup"
           id="org.jboss.tools.vpe.cordovasim.eclipse.cordovaSimLaunchConfigurationTypeTabGroup"
           type="org.jboss.tools.vpe.cordovasim.eclipse.cordovaSimLaunchConfigurationType">
+    </launchConfigurationTabGroup>
+ </extension>
+ <extension
+       point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+    <launchConfigurationTabGroup
+          class="org.jboss.tools.vpe.cordovasim.eclipse.launch.internal.FeedHenryLaunchConfigurationTabGroup"
+          id="org.jboss.tools.vpe.cordovasim.eclipse.cordovaSimLaunchConfigurationTypeTabGroup"
+          type="org.jboss.tools.vpe.cordovasim.eclipse.cordovaSimFeedHenryLaunchConfigurationType">
     </launchConfigurationTabGroup>
  </extension>
  <extension
