@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+  <extension point="org.eclipse.core.expressions.propertyTesters">
+    <propertyTester
+      id="org.jboss.tools.cordovasim.feedHenryTester"
+      type="org.eclipse.core.resources.IResource"
+      namespace="org.jboss.tools.cordovasim"
+      properties="isFeedHenry"
+      class="org.jboss.tools.vpe.cordovasim.eclipse.launch.internal.FeedHenryTester">
+    </propertyTester>
+ </extension>
  <extension
        point="org.eclipse.debug.core.launchConfigurationTypes">
     <launchConfigurationType
@@ -53,4 +62,31 @@
          </contextualLaunch>
       </shortcut>
    </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchShortcuts">
+      <shortcut
+            class="org.jboss.tools.vpe.cordovasim.eclipse.launch.internal.FeedHenryLaunchShortcut"
+            id="org.jboss.tools.vpe.cordovasim.eclipse.launchShortcut"
+            label="Run CordovaSim w/local FeedHenry server"
+            icon="icons/cordovasim_feed_henry_16.png"
+            modes="run">
+        <contextualLaunch>
+            <enablement>
+                <with variable="selection">
+                    <count value="1"/>
+                    <iterate>
+                        <adapt  type="org.eclipse.core.resources.IResource">
+                        	<and>
+	                        	<test property="org.eclipse.core.resources.projectNature" 
+	                           		value="org.eclipse.thym.core.HybridAppNature" />
+	                           	<test property="org.jboss.tools.cordovasim.isFeedHenry" 
+	                           		forcePluginActivation="true"/>
+                        	</and>
+                        </adapt> 
+                    </iterate>
+                </with>
+            </enablement>
+         </contextualLaunch>
+      </shortcut>
+ </extension>
 </plugin>

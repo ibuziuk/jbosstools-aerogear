@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Red Hat, Inc.
+ * Copyright (c) 2013-2015 Red Hat, Inc.
  * Distributed under license by Red Hat, Inc. All rights reserved.
  * This program is made available under the terms of the
  * Eclipse Public License v1.0 which accompanies this distribution,
@@ -27,6 +27,10 @@ import org.eclipse.ui.ide.ResourceUtil;
 import org.jboss.tools.vpe.cordovasim.eclipse.Activator;
 import org.jboss.tools.vpe.cordovasim.eclipse.launch.CordovaSimLaunchConstants;
 
+/**
+ * @author "Yahor Radtsevich (yradtsevich)"
+ * @author "Ilya Buziuk (ibuziuk)"
+ */
 public class CordovaSimLaunchShortcut implements ILaunchShortcut {
 
 	@Override
@@ -45,7 +49,7 @@ public class CordovaSimLaunchShortcut implements ILaunchShortcut {
 		}
 	}
 	
-	private void launch(IProject project, String mode) {
+	protected void launch(IProject project, String mode) {
 		try {
 			ILaunchConfigurationType cordovaSimLaunchConfiguraionType = DebugPlugin.getDefault().getLaunchManager()
 					.getLaunchConfigurationType(CordovaSimLaunchConstants.LAUNCH_CONFIGURATION_ID); 
@@ -67,14 +71,12 @@ public class CordovaSimLaunchShortcut implements ILaunchShortcut {
 		}
 	}
 
-	private ILaunchConfigurationWorkingCopy createEmptyLaunchConfiguration(
-			String namePrefix) throws CoreException {
+	protected ILaunchConfigurationWorkingCopy createEmptyLaunchConfiguration(String namePrefix) throws CoreException {
 		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
-		ILaunchConfigurationType launchConfigurationType 
-				= launchManager.getLaunchConfigurationType(CordovaSimLaunchConstants.LAUNCH_CONFIGURATION_ID);
+		ILaunchConfigurationType launchConfigurationType = launchManager.getLaunchConfigurationType(CordovaSimLaunchConstants.LAUNCH_CONFIGURATION_ID);
 		ILaunchConfigurationWorkingCopy launchConfiguration;
-		launchConfiguration = launchConfigurationType.newInstance(
-				null, launchManager.generateLaunchConfigurationName(namePrefix));
+		launchConfiguration = launchConfigurationType.newInstance(null, launchManager.generateLaunchConfigurationName(namePrefix));
 		return launchConfiguration;
 	}
+		
 }

@@ -23,7 +23,7 @@ import org.jboss.tools.vpe.cordovasim.eclipse.launch.CordovaSimLaunchConstants;
 
 /**
  * @author "Yahor Radtsevich (yradtsevich)"
- *
+ * @author "Ilya Buziuk (ibuziuk)"
  */
 public class CordovaSimLaunchConfigurationAutofillUtil {
 	public static void fillLaunchConfiguraion(ILaunchConfigurationWorkingCopy launchConfiguration, IProject project) {
@@ -31,14 +31,13 @@ public class CordovaSimLaunchConfigurationAutofillUtil {
 			launchConfiguration.setAttribute(CordovaSimLaunchConstants.PROJECT, project.getName());
 		}
 	}
-	
+
 	public static ILaunchConfiguration chooseLaunchConfiguration(ILaunchConfiguration[] configurations, IProject project) {
 		try {
-			for (ILaunchConfiguration configuration : configurations) {
-				String projectName;
-					projectName = configuration.getAttribute(CordovaSimLaunchConstants.PROJECT, (String) null);
-				
-				if (projectName != null && projectName.equals(project.getName())) {
+			for (ILaunchConfiguration configuration : configurations) {				
+				String projectName = configuration.getAttribute(CordovaSimLaunchConstants.PROJECT, (String) null);
+				String fh = configuration.getAttribute(CordovaSimLaunchConstants.FH, (String) null);
+				if (fh == null && projectName != null && projectName.equals(project.getName())) {
 					return configuration;
 				}
 			}
@@ -47,7 +46,7 @@ public class CordovaSimLaunchConfigurationAutofillUtil {
 		}
 		return null;
 	}
-	
+
 	public static IProject getProjectToRun(ISelection selection) {
 		if (selection instanceof StructuredSelection) {
 			StructuredSelection structuredSelection = (StructuredSelection) selection;
