@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007-2013 Red Hat, Inc.
+ * Copyright (c) 2007-2015 Red Hat, Inc.
  * Distributed under license by Red Hat, Inc. All rights reserved.
  * This program is made available under the terms of the
  * Eclipse Public License v1.0 which accompanies this distribution,
@@ -18,8 +18,6 @@ import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
@@ -61,49 +59,19 @@ public class CordovaSimLauncher {
 	//if you change this parameter, see also @org.jbosstools.browsersim.ui.BrowserSim
 	private static final String NOT_STANDALONE = BrowserSimLauncher.NOT_STANDALONE;	
 	
-	public static void launchCordovaSim(String projectString, String rootFolderString, String startPageString,
-			Integer port) {
+	public static void launchCordovaSim(IProject project, IContainer rootFolder, String startPage, Integer port) {
 		List<String> parameters = new ArrayList<String>();
+
 		parameters.add(NOT_STANDALONE);
 
-		IContainer rootFolder = null;
-		IProject project = null;
 		String cordovaEngineLocation = null;
 		String cordovaVersion = null;
-		
-		if (projectString != null) {
-			project = CordovaSimLaunchParametersUtil.getProject(projectString);
+
+		if (project != null && rootFolder != null) {	
 			
-			if (project != null) {
-				cordovaEngineLocation = CordovaSimLaunchParametersUtil.getCordovaEngineLocation(project);
-				cordovaVersion = CordovaSimLaunchParametersUtil.getCordovaVersion(project);			
-			}
+			cordovaEngineLocation = CordovaSimLaunchParametersUtil.getCordovaEngineLocation(project);
+			cordovaVersion = CordovaSimLaunchParametersUtil.getCordovaVersion(project);
 			
-			if (rootFolderString != null) {
-				rootFolder = CordovaSimLaunchParametersUtil.getRootFolder(project, rootFolderString);
-			} else {
-				rootFolder = CordovaSimLaunchParametersUtil.getDefaultRootFolder(project);
-			}
-		}
-		
-		String actualStartPageString = null;
-		if (startPageString != null) {
-			actualStartPageString = startPageString;
-		} else {
-			IResource startPage = CordovaSimLaunchParametersUtil.getDefaultStartPage(project, rootFolder);
-			IPath startPagePath = CordovaSimLaunchParametersUtil.getRelativePath(rootFolder, startPage);
-			if (startPagePath != null) {
-				String startPageFromConfigXml = CordovaSimLaunchParametersUtil.getDefaultStartPageFromConfigXml(project);
-				String startPageParameters = CordovaSimLaunchParametersUtil.getStartPageParameters(startPageFromConfigXml);
-				if (startPageParameters != null) {
-					actualStartPageString = startPagePath.toString() + startPageParameters;
-				} else {
-					actualStartPageString = startPagePath.toString();					
-				}
-			}
-		}
-		
-		if (rootFolder != null && actualStartPageString != null) {		
 			try {
 				if (!ServerStorage.getStorage().containsKey(port) && ServerUtil.isPortAvailable(port)) {
 					Server server = ServerCreator.createServer(project, rootFolder, cordovaEngineLocation, port);
@@ -115,7 +83,7 @@ public class CordovaSimLauncher {
 					ServerStorage.getStorage().put(port, server); // Adding server to the ServerStorage
 					
 					parameters.add(rootFolder.getRawLocation().makeAbsolute().toString());
-					parameters.add("http://localhost:" + port + "/" + actualStartPageString); //$NON-NLS-1$ //$NON-NLS-2$
+					parameters.add("http://localhost:" + port + "/" + startPage); //$NON-NLS-1$ //$NON-NLS-2$
 					
 					if (cordovaVersion != null) {
 						parameters.add("-version"); //$NON-NLS-1$
@@ -129,17 +97,7 @@ public class CordovaSimLauncher {
 				Activator.logError(e.getMessage(), e);
 			}
 		} else {
-			Display.getDefault().asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					Shell parentShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-					if (parentShell == null) {
-						parentShell = PlatformUI.getWorkbench().getDisplay().getShells()[0]; // Hot fix for gtk3
-					}	
-					MessageDialog.openError(parentShell,
-							Messages.CordovaSimLauncher_CANNOT_RUN_CORDOVASIM, Messages.CordovaSimLauncher_CANNOT_FIND_ROOT_FOLDER);					
-				}
-			});
+			showErrorMessage(Messages.CordovaSimLauncher_CANNOT_FIND_ROOT_FOLDER);
 		}
 	}
 	
@@ -197,6 +155,19 @@ public class CordovaSimLauncher {
 				String message = MessageFormat.format(Messages.ExceptionNotifier_PORT_IN_USE, port);
 				ExceptionNotifier.showErrorMessage(shell, message);
 				shell.dispose();
+			}
+		});
+	}
+	
+	private static void showErrorMessage(final String errorMessage) {
+		Display.getDefault().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				Shell parentShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+				if (parentShell == null) {
+					parentShell = PlatformUI.getWorkbench().getDisplay().getShells()[0]; // Hot fix for gtk3
+				}
+				MessageDialog.openError(parentShell, Messages.CordovaSimLauncher_CANNOT_RUN_CORDOVASIM, errorMessage);
 			}
 		});
 	}
