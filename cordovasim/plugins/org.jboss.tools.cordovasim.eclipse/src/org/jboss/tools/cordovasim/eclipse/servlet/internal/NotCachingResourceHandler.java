@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
-import org.eclipse.jetty.http.HttpHeaders;
+import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 
@@ -36,7 +36,7 @@ public class NotCachingResourceHandler extends ResourceHandler {
 			public long getDateHeader(String name) {
 				HttpServletRequest request = (HttpServletRequest) getRequest();
 
-				if (HttpHeaders.IF_MODIFIED_SINCE.equals(name)) {
+				if (HttpHeader.IF_MODIFIED_SINCE.equals(name)) {
 					return WAS_MODIFIED;
 				}
 				return request.getDateHeader(name);

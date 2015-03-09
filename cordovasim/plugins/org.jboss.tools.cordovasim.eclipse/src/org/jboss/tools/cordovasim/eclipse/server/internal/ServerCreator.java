@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013-2014 Red Hat, Inc.
+ * Copyright (c) 2013-2015 Red Hat, Inc.
  * Distributed under license by Red Hat, Inc. All rights reserved.
  * This program is made available under the terms of the
  * Eclipse Public License v1.0 which accompanies this distribution,
@@ -28,11 +28,11 @@ import org.eclipse.jetty.rewrite.handler.RewriteHandler;
 import org.eclipse.jetty.rewrite.handler.Rule;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -60,7 +60,7 @@ public class ServerCreator {
 	@SuppressWarnings("nls")
 	public static Server createServer(final IProject project, final IContainer resourceBase, String cordovaEngineLocation, Integer port) {
 		Server server = new Server();
-		SelectChannelConnector connector = new SelectChannelConnector();
+		ServerConnector connector = new ServerConnector(server);
 		connector.setReuseAddress(false);
 		connector.setSoLingerTime(0);  // Linux keeps the port blocked without this line
 		
