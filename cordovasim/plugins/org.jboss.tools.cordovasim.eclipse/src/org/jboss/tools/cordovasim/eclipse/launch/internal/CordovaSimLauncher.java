@@ -21,7 +21,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.launching.IVMInstall;
-import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -109,6 +108,7 @@ public class CordovaSimLauncher {
 			try {
 				if (!ServerStorage.getStorage().containsKey(port) && ServerUtil.isPortAvailable(port)) {
 					Server server = ServerCreator.createServer(project, rootFolder, cordovaEngineLocation, port);
+					server.dump(System.err);
 					server.start();
 										
 					ServerConnector connector = (ServerConnector) server.getConnectors()[0];

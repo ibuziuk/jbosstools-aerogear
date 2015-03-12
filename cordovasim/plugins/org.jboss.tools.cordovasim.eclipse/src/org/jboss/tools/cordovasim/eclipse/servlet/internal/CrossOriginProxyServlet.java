@@ -12,8 +12,11 @@ package org.jboss.tools.cordovasim.eclipse.servlet.internal;
 
 import java.net.URI;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.eclipse.jetty.proxy.AsyncProxyServlet;
 import org.eclipse.jetty.proxy.ProxyServlet;
 
 /**
@@ -23,24 +26,44 @@ import org.eclipse.jetty.proxy.ProxyServlet;
 public class CrossOriginProxyServlet extends ProxyServlet {
 	private static final long serialVersionUID = 1L;
 	private String urlParameterName;
-
+	
 	public CrossOriginProxyServlet(String urlParameterName) {
 		this.urlParameterName = urlParameterName;
+	}
+	
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		String value = config.getInitParameter("maxThreads");
+		System.out.println(value);
+		super.init(config);
+	}
+	
+	@Override
+	public void init() throws ServletException {
+		// TODO Auto-generated method stub
+		super.init();
 	}
 	
 	// TODO Do we really need "Host" header ? I would probably rewrite this method
 	@Override
 	protected URI rewriteURI(HttpServletRequest request) {
 		String proxyTo = getProxyTo(request);
-		if (proxyTo == null) {
+		if (proxyTo != null) {
+			return URI.create(proxyTo).normalize();
+		} else {
 			return null;
 		}
-		String path = request.getRequestURI();
-		String query = request.getQueryString();
-		if (query != null) {
-			path += "?" + query; //$NON-NLS-1$
-		}
-		return URI.create(proxyTo + "/" + path).normalize(); //$NON-NLS-1$
+		
+//		String proxyTo = getProxyTo(request);
+//		if (proxyTo == null) {
+//			return null;
+//		}
+//		String path = request.getRequestURI();
+//		String query = request.getQueryString();
+//		if (query != null) {
+//			path += "?" + query; //$NON-NLS-1$
+//		}
+//		return URI.create(proxyTo + "/" + path).normalize(); //$NON-NLS-1$
 	}
 	
 	private String getProxyTo(HttpServletRequest request) {
